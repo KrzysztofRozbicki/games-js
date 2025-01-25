@@ -1,0 +1,12 @@
+{
+    "javascript.inlayHints.variableTypes.suppressWhenTypeMatchesName": false,
+    "editor.inlayHints.enabled": "off",
+    "typescript.inlayHints.parameterNames.enabled": "none",
+    "typescript.inlayHints.variableTypes.enabled":false,
+    "javascript.inlayHints.parameterNames.suppressWhenArgumentMatchesName": false,
+    "typescript.inlayHints.parameterNames.suppressWhenArgumentMatchesName": false,
+    "typescript.inlayHints.variableTypes.suppressWhenTypeMatchesName": false,
+    "javascript.inlayHints.parameterNames.enabled" : "none",
+    "workbench.colorCustomizations": {
+    }
+}
