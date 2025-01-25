@@ -41,3 +41,4 @@ const O = [
 
 export const shapes_array = [T, Z, N, I, O, L, J];
 export default shapes_array;
+
