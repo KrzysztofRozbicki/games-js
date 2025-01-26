@@ -11,7 +11,20 @@
     <header></header>
     <main>
       <h1>This is Tetris</h1>
-      <canvas class="tetris-canvas"></canvas>
+
+      <div class="game_box">
+        <div>
+          <canvas class="tetris_canvas"></canvas>
+          <div id="game_over" class="hidden">GAME OVER</div>
+          <button id="game_start" type="button">START</button>
+        </div>
+        <div class="game_info">
+          <canvas class="tetris_canvas tetris_canvas--next_shape"></canvas>
+          <p>Score: <strong id="score">0</strong></p>
+          <p>Lines: <strong id="lines">0</strong></p>
+          <p>Level: <strong id="level">1</strong></p>
+        </div>
+      </div>
     </main>
     <footer></footer>
     <script type="text/javascript" src="script/index.js"></script>

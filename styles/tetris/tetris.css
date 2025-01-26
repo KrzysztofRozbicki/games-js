@@ -1,3 +1,75 @@
-.tetris-canvas {
-  border: 1px solid black;
+.game_box {
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+}
+
+.game_box > div {
+  position: relative;
+}
+
+.tetris_canvas {
+  outline: 2px solid black;
+  position: relative;
+  background-color: black;
+}
+
+.tetris_canvas--next_shape {
+  outline: 2px solid black;
+}
+
+.blur {
+  filter: blur(20px);
+}
+
+#game_over {
+  position: absolute;
+  font-family: "Michroma";
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3vh;
+  color: var(--red);
+  text-align: center;
+}
+
+#game_start {
+  position: absolute;
+  font-family: "Michroma";
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3vh;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 4px solid rgba(0, 0, 0, 0.125);
+  border-right: none;
+  border-bottom: none;
+  background-color: var(--blue);
+  color: white;
+  cursor: pointer;
+  box-shadow: inset -8px -8px 8px rgba(0, 0, 0, 0.5);
+}
+
+#game_start:hover,
+#game_start:focus,
+#game_start:active {
+  background-color: var(--green);
+  color: rgba(133, 0, 0, 0.875);
+  font-weight: 700;
+  border-right: none;
+  border-bottom: none;
+  box-shadow: inset -8px -8px 8px rgba(255, 255, 255, 0.25);
+}
+
+.game_info {
+  font-family: "Michroma";
+}
+
+.game_info p {
+  display: flex;
+  justify-content: space-between;
+}
+.game_info p span {
+  display: inline-block;
 }

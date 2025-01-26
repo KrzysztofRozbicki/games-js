@@ -360,3 +360,7 @@ a {
 ul {
   padding-inline-start: 0;
 }
+
+button {
+  margin: 0;
+}

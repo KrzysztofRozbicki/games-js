@@ -53,3 +53,7 @@ nav ul {
   gap: 1rem;
   margin-inline: auto;
 }
+
+.hidden {
+  display: none;
+}

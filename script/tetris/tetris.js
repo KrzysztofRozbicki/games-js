@@ -1,10 +1,16 @@
-import shapes_array from './utils/blocks.js';
+import { collide, drop_shape, rotate_shape, create_arena, random_color, new_shape, draw_next_shape, draw_shape, draw_arena } from './utils/utils.js';
 
-const canvas = document.querySelector('.tetris-canvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.querySelector('.tetris_canvas');
+const canvas_next_shape = document.querySelector('.tetris_canvas--next_shape');
+export const ctx = canvas.getContext('2d');
+export const ctx_next_shape = canvas_next_shape.getContext('2d');
 
-// Setting the canvas and block size
+export let WIDTH = 10;
+export let HEIGHT = 20;
+export let WIDTH_NEXT_SHAPE = 4;
+export let HEIGHT_NEXT_SHAPE = 3;
 
+// Canvas declaration;
 const screen_proportion = window.innerWidth / window.innerHeight;
 let canvas_width = window.innerWidth - 300;
 let canvas_height = canvas_width * 2;
@@ -12,184 +18,127 @@ if (screen_proportion > 0.6) {
     canvas_height = window.innerHeight - 300;
     canvas_width = canvas_height / 2;
 }
+export const block_size = canvas_width / WIDTH;
 
 canvas.width = canvas_width;
 canvas.height = canvas_height;
 
-const block_size = canvas_width / 10;
+canvas_next_shape.width = block_size * WIDTH_NEXT_SHAPE;
+canvas_next_shape.height = block_size * HEIGHT_NEXT_SHAPE;
 
-// Setting the global variables
+ctx.scale(block_size, block_size);
+ctx_next_shape.scale(block_size, block_size);
+ctx.strokeStyle = "black";
+ctx_next_shape.strokeStyle = "black";
 
-let drop_time = 100;
-let dropping = true;
-let timeoutID;
+// button to start game
+const start_button = document.getElementById("game_start");
+start_button.addEventListener('click', () => {
+    start_game();
+});
 
-let block_color = random_color();
-ctx.fillStyle = block_color;
+// Global variables and state
 
-const area_grid = new Array(10);
-for (let i = 0; i < area_grid.length; i++) {
-    area_grid[i] = new Array(20).fill(null);
+let last_time = 0;
+
+export const state = {
+    position: { x: 0, y: 0 },
+    shape: null,
+    next_shape: null,
+    score: 0,
+    game_over: true,
+    speed: 1000,
+    arena: null,
+    arena_next_shape: null,
+    drop_counter: 0,
+    lines: 0,
+    color: random_color(),
 }
 
-function clear_area_grid() {
-    for (let i = 0; i < area_grid.length; i++) {
-        for (let j = 0; j < area_grid[i].length; j++) {
-            if (area_grid[i][j] === false) {
-                area_grid[i][j] = null;
-            }
-        }
+
+
+
+function draw() {
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = state.color;
+    ctx_next_shape.fillStyle = 'black';
+    ctx_next_shape.fillRect(0, 0, canvas_next_shape.width, canvas_next_shape.height);
+    ctx_next_shape.fillStyle = state.color;
+    draw_arena(state);
+    draw_shape(state);
+    draw_next_shape(state);
+}
+
+
+
+function game(time = 0) {
+    const delta_time = time - last_time;
+    last_time = time;
+    state.drop_counter += delta_time;
+    if (state.drop_counter > state.speed) {
+        drop_shape(state);
+        if (state.game_over) return;
     }
-    // debugger;
+    draw();
+    requestAnimationFrame(game);
 }
 
-
-
-
-function random_color() {
-    const green = Math.floor(Math.random() * (255 - 63) + 63);
-    const blue = Math.floor(Math.random() * (255 - 63) + 63);
-    const red = Math.floor(Math.random() * (255 - 63) + 63);
-    return `rgb(${green}, ${blue}, ${red})`
+export function end_game() {
+    state.game_over = true;
+    const game_over_text = document.getElementById("game_over");
+    canvas.classList.add('blur');
+    start_button.classList.remove('hidden');
+    game_over_text.classList.remove("hidden");
 }
 
+function start_game() {
+    canvas.classList.remove('blur');
+    start_button.classList.add("hidden");
+    const game_over_text = document.getElementById("game_over");
+    game_over_text.classList.add("hidden");
+    state.game_over = false;
+    state.score = 0;
+    state.lines = 0;
+    state.color = random_color();
+    ctx.fillStyle = state.color;
+    ctx_next_shape.fillStyle = state.color;
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = state.color;
+    ctx_next_shape.fillStyle = 'black';
+    ctx_next_shape.fillRect(0, 0, canvas_next_shape.width, canvas_next_shape.height);
+    ctx_next_shape.fillStyle = state.color;
+    state.arena = create_arena(WIDTH, HEIGHT);
+    state.arena_next_shape = create_arena(WIDTH_NEXT_SHAPE, HEIGHT_NEXT_SHAPE);
+    document.getElementById('score').innerText = `${state.score}`;
+    document.getElementById('lines').innerText = `${state.lines}`;
+    new_shape(state);
+    game();
+}
 
-function draw_block(shape, { x = 0, y = 0 }) {
-
-    const x_start = x;
-    const y_start = y;
-    clear_area_grid()
-    for (let i = 0; i < shape.length; i++) {
-        for (let j = 0; j < shape[i].length; j++) {
-            if (shape[i][j]) {
-
-                // Jeśli nowy blok wychodzi poza canvas narysuj nowy blok
-                if (x >= canvas.width && y_start === 0) {
-                    dropping = false;
-                    console.error('error drawing again');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    return;
-                }
-
-                const is_colliding = collision_detection(x, y);
-                if (is_colliding) {
-                    return;
-                }
-
-                ctx.fillRect(x, y, block_size, block_size);
-                save_cell_to_area(x, y);
-
-
-
-                // Jeśli blok do  ciera na koniec planszy
-                if (y + block_size >= canvas.height && !shape[i][j + 1]) {
-                    dropping = false;
-                    save_cell_to_area(x, y);
-                    save_shape_to_area()
-                    return;
-                }
-
-            }
-            x = +((x + block_size).toFixed(2));
-        }
-        x = x_start;
-        y = +((y + block_size).toFixed(2));
+document.addEventListener('keydown', event => {
+    if (state.game_over) return;
+    const key = event.key;
+    if (key === 'ArrowLeft') {
+        state.position.x--;
+        if (collide(state.shape, state)) {
+            state.position.x++;
+        };
     }
-}
-
-function save_cell_to_area(x, y) {
-    let x_pos = x;
-    let y_pos = y;
-    x_pos = Math.round(x_pos / block_size);
-    y_pos = Math.round(y_pos / block_size);
-    area_grid[x_pos][y_pos] = false;
-}
-
-function save_shape_to_area() {
-    for (let i = 0; i < area_grid.length; i++) {
-        for (let j = 0; j < area_grid[i].length; j++) {
-            if (area_grid[i][j] === false) {
-                area_grid[i][j] = true;
-                ctx.fillRect(i * block_size, j * block_size, block_size, block_size);
-            }
-        }
+    if (key === 'ArrowRight') {
+        state.position.x++;
+        if (collide(state.shape, state)) {
+            state.position.x--;
+        };
     }
-}
-
-
-
-function collision_detection(x, y) {
-
-    let x_pos = x;
-    let y_pos = y;
-    x_pos = Math.round(x_pos / block_size);
-    y_pos = Math.round(y_pos / block_size);
-    if (area_grid[x_pos][y_pos] === true) {
-        debugger;
-        dropping = false;
-        save_shape_to_area()
-        return true;
+    if (key === "ArrowUp") {
+        rotate_shape(state);
     }
-    return false;
-}
-
-function draw_area() {
-    for (let i = 0; i < area_grid.length; i++) {
-        for (let j = 0; j < area_grid[i].length; j++) {
-            if (area_grid[i][j] === true) {
-                ctx.fillRect(i * block_size, j * block_size, block_size, block_size);
-            }
-        }
+    if (key === 'ArrowDown') {
+        drop_shape(state)
     }
-}
-
-function new_block() {
-    const random_start_position = Math.floor(Math.random() * 10) * block_size;
-    const random_block_index = Math.floor(Math.random() * shapes_array.length);
-    const random_block = shapes_array[random_block_index];
-    const start_position = { x: +(random_start_position.toFixed(2)), y: 0 }
-    draw_block(random_block, start_position);
-    return { random_block, start_position };
-}
+});
 
 
-function drop_block(shape, start_position) {
-    clearTimeout(timeoutID);
-    dropping = true;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let { x, y } = start_position;
-    draw_block(shape, start_position)
-    draw_area()
-
-    let new_position = { x, y: +(y += block_size).toFixed(2) };
-
-    timeoutID = setTimeout(() => {
-        if (dropping) {
-            drop_block(shape, new_position)
-        }
-        else {
-            console.log(start_position);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            draw_area()
-            game();
-            return;
-        }
-    }, drop_time)
-
-
-}
-
-
-
-
-function game() {
-    const block = new_block();
-    const shape = block.random_block;
-    const start_position = block.start_position;
-    drop_block(shape, start_position);
-}
-
-
-
-game();
 
