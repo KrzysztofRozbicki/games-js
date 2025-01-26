@@ -3,15 +3,15 @@ menu.innerHTML = `
     <nav>
     <ul>
         <li>
-            <a href="/">Home</a>
+            <a href="index.html">Home</a>
 
         </li>
         <li>
-            <a href="/tetris.html">Tetris</a>
+            <a href="tetris.html">Tetris</a>
 
         </li>
         <li>
-            <a href="/snake.html">Snake</a>
+            <a href="snake.html">Snake</a>
         </li>
     </ul>
     </nav>
