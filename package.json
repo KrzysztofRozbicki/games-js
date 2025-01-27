@@ -1,6 +1,6 @@
 {
   "name": "Pogbit first games",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Create simple games in pure js",
   "main": "index.js",
   "type": "module",
