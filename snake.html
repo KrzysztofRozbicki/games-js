@@ -1,18 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Snake Game</title>
-<link rel="stylesheet" href="styles/normalize.css" type="text/css">
-<link rel="stylesheet" href="styles/global.css" type="text/css">
-<link rel="stylesheet" href="styles/index.css" type="text/css">
-
-</head>
-<body>
-<header></header>
-<main>
-    <h1>This is Snake</h1>
-</main>
-<footer></footer>
-<script type="text/javascript" src="script/index.js"></script>
-</body>
+  <head>
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="styles/normalize.css" type="text/css" />
+    <link rel="stylesheet" href="styles/global.css" type="text/css" />
+    <link rel="stylesheet" href="styles/index.css" type="text/css" />
+    <link rel="stylesheet" href="styles/snake/snake.css" type="text/css" />
+    <link rel="stylesheet" href="styles/tetris/tetris.css" type="text/css" />
+  </head>
+  <body>
+    <header></header>
+    <main>
+      <h1>This is Snake</h1>
+      <div class="game_box">
+        <div>
+          <canvas id="canvas"></canvas>
+          <div id="game_over" class="hidden">GAME OVER</div>
+          <button id="game_start" type="button">START</button>
+        </div>
+        <div class="game_info">
+          <p>Score:</p>
+          <p><strong id="score">0</strong></p>
+          <!-- <p>Length: <strong id="lines">0</strong></p> -->
+          <p>Length:</p>
+          <p><strong id="length">1</strong></p>
+        </div>
+      </div>
+    </main>
+    <footer></footer>
+    <script type="text/javascript" src="script/index.js"></script>
+    <script type="module" src="script/snake/snake.js"></script>
+  </body>
 </html>

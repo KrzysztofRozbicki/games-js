@@ -9,6 +9,7 @@ export let WIDTH = 10;
 export let HEIGHT = 20;
 export let WIDTH_NEXT_SHAPE = 4;
 export let HEIGHT_NEXT_SHAPE = 3;
+const STARTING_SPEED = 1000;
 
 // Canvas declaration;
 const screen_proportion = window.innerWidth / window.innerHeight;
@@ -47,16 +48,13 @@ export const state = {
     next_shape: null,
     score: 0,
     game_over: true,
-    speed: 1000,
+    speed: STARTING_SPEED,
     arena: null,
     arena_next_shape: null,
     drop_counter: 0,
     lines: 0,
     color: random_color(),
 }
-
-
-
 
 function draw() {
     ctx.fillStyle = 'black';
@@ -100,6 +98,7 @@ function start_game() {
     state.game_over = false;
     state.score = 0;
     state.lines = 0;
+    state.speed = STARTING_SPEED;
     state.color = random_color();
     ctx.fillStyle = state.color;
     ctx_next_shape.fillStyle = state.color;
