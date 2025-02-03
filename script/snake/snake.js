@@ -3,7 +3,7 @@ import { KEY_BINDINGS, draw, move, get_initial_state, check_back } from "./utils
 const canvas = document.getElementById('canvas');
 export const ctx = canvas.getContext('2d');
 
-export let SIZE = 10;
+export let SIZE = 20;
 const window_height = window.innerHeight - 300;
 const window_width = window.innerWidth - 300;
 let canvas_size = window_height > window_width ? window_width : window_height
@@ -54,8 +54,6 @@ start_button.addEventListener('click', () => {
 
 document.addEventListener('keydown', event => {
     const direction = KEY_BINDINGS[event.key];
-    const key = getDirectionKey(direction);
-    console.log(key);
     if (check_back(direction)) {
         return;
     }

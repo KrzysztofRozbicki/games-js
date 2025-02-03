@@ -13,6 +13,9 @@ menu.innerHTML = `
         <li>
             <a href="snake.html">Snake</a>
         </li>
+           <li>
+            <a href="animacja-test.html">Test Animacji</a>
+        </li>
     </ul>
     </nav>
 `
