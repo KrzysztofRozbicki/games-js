@@ -59,9 +59,3 @@ document.addEventListener('keydown', event => {
     }
     state.move = direction;
 });
-
-function getDirectionKey(direction) {
-    return Object.keys(KEY_BINDINGS).find(
-        key => KEY_BINDINGS[key].x === direction.x && KEY_BINDINGS[key].y === direction.y
-    ) || null; // Return null if no match is found
-}
